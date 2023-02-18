@@ -29,7 +29,7 @@ services:
 
 
   ewm-service:
-    build: ../new/java-explore-with-me/main-service
+    build: ./main-service
     image: main-service-image:latest
     container_name: main-service
     ports:
