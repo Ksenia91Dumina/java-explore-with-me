@@ -2,47 +2,48 @@ version: '3.8'
 services:
   stats-server:
     build: ./stats-service
-    image: stats-server-image:latest
-    container_name: stats-server
+    image: stats-service-image
+    container_name: stats-service
     ports:
       - "9090:9090"
-    environment:
-      - DB_NAME=stats-server-db
-      - POSTGRES_USER=root
-      - POSTGRES_PASSWORD=root
-      - DB_HOST=stats-db
-      - DB_PORT=5432
     depends_on:
       - stats-db
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/stats-service
+      - DB_NAME=stats-service
+      - POSTGRES_USER=user
+      - POSTGRES_PASSWORD=pass
+      - DB_HOST=localhost
+      - DB_PORT=5432
 
   stats-db:
     image: postgres:13.7-alpine
     volumes:
       - /var/lib/postgresql/data/
-    container_name: stats-server-postgres
+    container_name: stats-service-postgres
     ports:
       - "6541:5432"
     environment:
-      - POSTGRES_DB=stats-server-db
-      - POSTGRES_USER=root
-      - POSTGRES_PASSWORD=root
+      - POSTGRES_DB=stats-service
+      - POSTGRES_USER=user
+      - POSTGRES_PASSWORD=pass
 
 
   ewm-service:
     build: ./main-service
-    image: main-service-image:latest
+    image: main-service-image
     container_name: main-service
     ports:
       - "8080:8080"
-    environment:
-      - DB_NAME=main-service-db
-      - POSTGRES_USER=root
-      - POSTGRES_PASSWORD=root
-      - DB_HOST=ewm-db
-      - DB_PORT=5432
     depends_on:
       - ewm-db
       - stats-server
+    environment:
+      - DB_NAME=main-service
+      - POSTGRES_USER=user
+      - POSTGRES_PASSWORD=pass
+      - DB_HOST=ewm-db
+      - DB_PORT=5432
 
   ewm-db:
     image: postgres:13.7-alpine
@@ -52,6 +53,6 @@ services:
     ports:
       - "6542:5432"
     environment:
-      - POSTGRES_DB=main-service-db
-      - POSTGRES_USER=root
-      - POSTGRES_PASSWORD=root
+      - POSTGRES_DB=main-service
+      - POSTGRES_USER=user
+      - POSTGRES_PASSWORD=pass
