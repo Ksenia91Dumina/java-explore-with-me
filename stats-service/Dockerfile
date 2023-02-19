@@ -1,3 +1,3 @@
-FROM amazoncorretto:11
-COPY server/target/*.jar app.jar
-ENTRYPOINT ["java","-jar","/app.jar"]
+FROM openjdk:11
+COPY server/target/*.jar stats-server.jar
+ENTRYPOINT ["java","-jar","/stats-server.jar"]
