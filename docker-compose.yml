@@ -2,8 +2,8 @@ version: '3.8'
 services:
   stats-server:
     build: ./stats-server
-    image: stats-server-image
-    container_name: stats-server
+    image: stats_service_image
+    container_name: stat_service_container
     depends_on:
       - ewm-db
     ports:
@@ -27,8 +27,8 @@ services:
 
   ewm-service:
     build: ./main-service
-    image: main-service-image
-    container_name: main-service
+    image: main_service_image
+    container_name: main_service_container
     depends_on:
       - ewm-db
     ports:
