@@ -5,11 +5,13 @@ services:
     image: stats_service_image
     container_name: stat_service_container
     depends_on:
-      - ewm-db
+      - stats-db
     ports:
       - "9090:9090"
     environment:
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://stats-db:5432/ExploreWithMeStat
+      - DB_NAME=ExploreWithMeStat
+      - DB_HOST=stats-db
+      - DB_PORT=5432
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=root
 
@@ -31,19 +33,19 @@ services:
     container_name: main_service_container
     depends_on:
       - ewm-db
+      - stats-server
     ports:
       - "8080:8080"
     environment:
-      - ewm-stats-server_url=http://stats-server:9090
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://ewm-db:5432/ExploreWithMe
+      - DB_NAME=ExploreWithMe
+      - DB_HOST=ewm-db
+      - DB_PORT=5432
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=root
 
   ewm-db:
     image: postgres:14-alpine
     container_name: postgres_emw_container
-    depends_on:
-      - stats-db
     ports:
       - "6542:5432"
     volumes:

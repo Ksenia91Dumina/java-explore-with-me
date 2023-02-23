@@ -24,7 +24,7 @@ public class StatController {
 
     @PostMapping("/hit")
     public void addHit(@RequestBody NewHitDto newHitDto) {
-        log.info("Выполнение запроса addHit");
+        log.info("POST addHit");
         service.addHitInfo(newHitDto);
     }
 
@@ -36,7 +36,7 @@ public class StatController {
             @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") LocalDateTime end,
             @RequestParam(required = false, defaultValue = "") List<String> uris,
             @RequestParam(required = false, defaultValue = "false") boolean unique) {
-        log.info("Выполнение запроса getStat");
+        log.info("GET getStat");
         return service.getStatInfo(start, end, uris, unique);
     }
 }
