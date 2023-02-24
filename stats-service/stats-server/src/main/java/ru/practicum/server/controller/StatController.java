@@ -3,29 +3,32 @@ package ru.practicum.server.controller;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import ru.practicum.dto.HitDto;
 import ru.practicum.dto.NewHitDto;
 import ru.practicum.dto.StatInfoDto;
-import ru.practicum.server.service.StatService;
+import ru.practicum.server.service.StatServiceImpl;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
+@Validated
 @Slf4j
 public class StatController {
-    private final StatService service;
+    private final StatServiceImpl service;
 
     @PostMapping("/hit")
-    public void addHit(@RequestBody NewHitDto newHitDto) {
+    public HitDto addHit(@RequestBody NewHitDto newHitDto) {
         log.info("POST addHit");
-        service.addHitInfo(newHitDto);
+        return service.addHit(newHitDto);
     }
 
     @GetMapping("/stats")

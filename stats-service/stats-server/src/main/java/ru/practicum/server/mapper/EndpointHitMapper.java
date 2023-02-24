@@ -3,11 +3,10 @@ package ru.practicum.server.mapper;
 import ru.practicum.dto.HitDto;
 import ru.practicum.dto.NewHitDto;
 import ru.practicum.server.model.EndpointHit;
-import java.time.LocalDateTime;
 
 public class EndpointHitMapper {
 
-    public static HitDto toEndpointHit(EndpointHit endpointHit) {
+    public static HitDto toHitDto(EndpointHit endpointHit) {
         return HitDto.builder()
                 .app(endpointHit.getApp())
                 .uri(endpointHit.getUri())
@@ -16,12 +15,21 @@ public class EndpointHitMapper {
                 .build();
     }
 
-    public static EndpointHit toEndpointHitFromNewHitDto(NewHitDto newHitDto) {
-        return new EndpointHit(0,
-                newHitDto.getApp(),
-                newHitDto.getUri(),
-                newHitDto.getIp(),
-                LocalDateTime.now()
-        );
+    public static EndpointHit toEndpointHit(HitDto hitDto) {
+        return EndpointHit.builder()
+                .app(hitDto.getApp())
+                .uri(hitDto.getUri())
+                .ip(hitDto.getIp())
+                .timestamp(hitDto.getTimestamp())
+                .build();
     }
+
+    public static EndpointHit toEndpointHitFromNewDto(NewHitDto hitDto) {
+        return EndpointHit.builder()
+                .app(hitDto.getApp())
+                .uri(hitDto.getUri())
+                .ip(hitDto.getIp())
+                .build();
+    }
+
 }
