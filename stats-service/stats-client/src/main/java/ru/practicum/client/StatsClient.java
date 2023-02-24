@@ -21,8 +21,8 @@ public class StatsClient extends BaseClient {
                 .build());
     }
 
-    public ResponseEntity<Object> hit(HitDto HitDto) {
-        return post("/hit", HitDto);
+    public ResponseEntity<Object> hit(HitDto hitDto) {
+        return post("/hit", hitDto);
     }
 
     public ResponseEntity<Object> getStats(@NotNull LocalDateTime start, @NotNull LocalDateTime end,
