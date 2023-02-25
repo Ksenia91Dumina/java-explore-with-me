@@ -2,15 +2,14 @@ package ru.practicum.server.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import ru.practicum.dto.HitDto;
-import ru.practicum.dto.NewHitDto;
-import ru.practicum.dto.StatInfoDto;
+import org.springframework.transaction.annotation.Transactional;
+import ru.practicum.dto.EndpointHitDto;
+import ru.practicum.dto.ViewStatsDto;
 import ru.practicum.server.mapper.EndpointHitMapper;
 import ru.practicum.server.model.EndpointHit;
 import ru.practicum.server.repository.StatRepository;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -19,37 +18,19 @@ public class StatServiceImpl implements StatService {
     private final StatRepository repository;
 
     @Override
-    public HitDto addHit(NewHitDto newHitDto) {
-        EndpointHit endpointHit = EndpointHitMapper.toEndpointHitFromNewDto(newHitDto);
-        return EndpointHitMapper.toHitDto(repository.save(endpointHit));
+    @Transactional
+    public EndpointHitDto addHit(EndpointHitDto endpointHitDto) {
+        EndpointHit endpointHit = repository.save(EndpointHitMapper.toEndpointHit(endpointHitDto));
+        return EndpointHitMapper.toEndpointHitDto(endpointHit);
     }
 
     @Override
-    public List<StatInfoDto> getStatInfo(LocalDateTime start, LocalDateTime end, List<String> uris,
-                                         boolean unique) {
-
-        List<StatInfoDto> stats;
-        List<StatInfoDto> response = new ArrayList<>();
+    public List<ViewStatsDto> getStats(LocalDateTime start, LocalDateTime end, List<String> uris, Boolean unique) {
         if (unique) {
-            stats = repository.getUniqueStat(start, end);
-            for (StatInfoDto stat : stats) {
-                for (String uri : uris) {
-                    if (stat.getUri().contains(uri)) {
-                        response.add(stat);
-                    }
-                }
-            }
+            return repository.getUniqueStat(start, end, uris);
         } else {
-            stats = repository.getNoUniqueStat(start, end);
-            for (StatInfoDto stat : stats) {
-                for (String uri : uris) {
-                    if (stat.getUri().contains(uri)) {
-                        response.add(stat);
-                    }
-                }
-            }
+            return repository.getNonUniqueStat(start, end, uris);
         }
-        return response;
     }
 
 }

@@ -1,13 +1,13 @@
 package ru.practicum.server.mapper;
 
-import ru.practicum.dto.HitDto;
-import ru.practicum.dto.NewHitDto;
+import ru.practicum.dto.EndpointHitDto;
 import ru.practicum.server.model.EndpointHit;
 
 public class EndpointHitMapper {
 
-    public static HitDto toHitDto(EndpointHit endpointHit) {
-        return HitDto.builder()
+    public static EndpointHitDto toEndpointHitDto(EndpointHit endpointHit) {
+        return EndpointHitDto.builder()
+                .id(endpointHit.getId())
                 .app(endpointHit.getApp())
                 .uri(endpointHit.getUri())
                 .ip(endpointHit.getIp())
@@ -15,21 +15,14 @@ public class EndpointHitMapper {
                 .build();
     }
 
-    public static EndpointHit toEndpointHit(HitDto hitDto) {
+    public static EndpointHit toEndpointHit(EndpointHitDto endpointHitDto) {
         return EndpointHit.builder()
-                .app(hitDto.getApp())
-                .uri(hitDto.getUri())
-                .ip(hitDto.getIp())
-                .timestamp(hitDto.getTimestamp())
+                .app(endpointHitDto.getApp())
+                .uri(endpointHitDto.getUri())
+                .ip(endpointHitDto.getIp())
+                .timestamp(endpointHitDto.getTimestamp())
                 .build();
     }
 
-    public static EndpointHit toEndpointHitFromNewDto(NewHitDto hitDto) {
-        return EndpointHit.builder()
-                .app(hitDto.getApp())
-                .uri(hitDto.getUri())
-                .ip(hitDto.getIp())
-                .build();
-    }
 
 }
