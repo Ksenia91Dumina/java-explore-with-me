@@ -1,57 +1,53 @@
 version: '3.8'
 services:
   stats-server:
-    build: ./stats-service
-    image: stats-server-image:latest
-    container_name: stats-server
+    build: stats-service/stats-server
+    image: stats-service-image
+    container_name: stats-server-container
+    depends_on:
+      - stats-db
     ports:
       - "9090:9090"
     environment:
-      - DB_NAME=stats-server-db
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://stats-db:5432/stats-db
       - POSTGRES_USER=root
       - POSTGRES_PASSWORD=root
-      - DB_HOST=stats-db
-      - DB_PORT=5432
-    depends_on:
-      - stats-db
 
   stats-db:
-    image: postgres:13.7-alpine
-    volumes:
-      - /var/lib/postgresql/data/
-    container_name: stats-server-postgres
+    image: postgres:14-alpine
+    container_name: stats-db-container
     ports:
       - "6541:5432"
+    volumes:
+      - /var/lib/postgresql/data/
     environment:
-      - POSTGRES_DB=stats-server-db
+      - POSTGRES_DB=stats-db
       - POSTGRES_USER=root
       - POSTGRES_PASSWORD=root
-
 
   ewm-service:
-    build: ../new/java-explore-with-me/main-service
-    image: main-service-image:latest
-    container_name: main-service
-    ports:
-      - "8080:8080"
-    environment:
-      - DB_NAME=main-service-db
-      - POSTGRES_USER=root
-      - POSTGRES_PASSWORD=root
-      - DB_HOST=ewm-db
-      - DB_PORT=5432
+    build: main-service
+    image: main-service-image
+    container_name: main-service-container
     depends_on:
       - ewm-db
       - stats-server
+    ports:
+      - "8080:8080"
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://ewm-db:5432/ewm-db
+      - POSTGRES_USER=root
+      - POSTGRES_PASSWORD=root
+      - stats-service.url=http://stats-server:9090
 
   ewm-db:
-    image: postgres:13.7-alpine
-    volumes:
-      - /var/lib/postgresql/data/
-    container_name: ewm-db-postgres
+    image: postgres:14-alpine
+    container_name: emw-db-container
     ports:
       - "6542:5432"
+    volumes:
+      - /var/lib/postgresql/data/
     environment:
-      - POSTGRES_DB=main-service-db
+      - POSTGRES_DB=ewm-db
       - POSTGRES_USER=root
       - POSTGRES_PASSWORD=root
